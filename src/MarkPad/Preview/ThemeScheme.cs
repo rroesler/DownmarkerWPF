@@ -20,7 +20,7 @@ namespace MarkPad.Preview
             var uri = new Uri(request.Url);
             var segments = uri.Segments;
 
-            var path = Path.Combine(HtmlPreview.BaseDirectory,
+            var path = Path.Combine(HtmlPreview.ThemeDirectory,
                 string.Concat(uri.Segments.Skip(1).Select(p => p.Replace("/", "\\"))));
 
             var file = new FileInfo(path);

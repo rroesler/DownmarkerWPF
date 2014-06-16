@@ -13,7 +13,7 @@ using MarkPad.Preview;
 
 namespace MarkPad.Infrastructure
 {
-    class AppBootstrapper : AutofacBootstrapper<ShellViewModel>
+    public class AppBootstrapper : AutofacBootstrapper<ShellViewModel>
     {
         JumpListIntegration jumpList;
 
@@ -102,7 +102,7 @@ namespace MarkPad.Infrastructure
             var directoryName = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)
                 ?? Directory.GetCurrentDirectory();
 
-            HtmlPreview.BaseDirectory = Path.Combine(directoryName, "Themes");
+            HtmlPreview.ThemeDirectory = Path.Combine(directoryName, "Themes");
         }
 
         private void DumpIconsForDocuments()

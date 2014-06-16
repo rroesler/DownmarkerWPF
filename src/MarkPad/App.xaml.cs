@@ -19,9 +19,9 @@ namespace MarkPad
         {
             InitializeComponent();
 
-            HtmlPreview.Init();
-
             bootstrapper = new AppBootstrapper();
+
+            HtmlPreview.Init( bootstrapper.GetEventAggregator() );
         }
 
         public void HandleArguments(string[] args)
@@ -29,6 +29,7 @@ namespace MarkPad
             if (args.Length == 2)
             {
                 var filePath = args[1];
+
                 bootstrapper.GetEventAggregator().Publish(new FileOpenEvent(filePath));
             }
         }

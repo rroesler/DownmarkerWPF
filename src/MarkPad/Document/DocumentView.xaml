@@ -25,8 +25,10 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition x:Name="webBrowserColumn" Width="{Binding DistractionFree, Converter={Converters:BoolToGridLengthConverter Invert=True}}" />
+            <!-- ColumnDefinition Width="*" -->
+            <ColumnDefinition x:Name="markDownColumn" Width="{Binding ShowMD, Converter={Converters:BoolToGridLengthConverter}, Mode=OneWay}" />
+            <ColumnDefinition x:Name="webBrowserColumn" Width="{Binding ShowWeb, Converter={Converters:BoolToGridLengthConverter}, Mode=OneWay}" />
+            <!-- ColumnDefinition x:Name="webBrowserColumn" Width="{Binding ShowWeb, Converter={Converters:BoolToGridLengthConverter Invert=True}}" -->
         </Grid.ColumnDefinitions>
 
       <Controls:SiteView SiteContext="{Binding MarkpadDocument.SiteContext}" x:Name="siteView">
@@ -35,21 +37,19 @@
           <Style.Triggers>
               <DataTrigger Binding="{Binding MarkpadDocument.SiteContext}"
                          Value="{x:Null}">
-              <Setter Property="Visibility"
-                      Value="Collapsed" />
-            </DataTrigger>
+              <Setter Property="Visibility" Value="Collapsed" />
+              </DataTrigger>
               <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding MarkpadDocument.SiteContext.IsLoading}" Value="False" />
-                                <Condition Binding="{Binding MarkpadDocument.SiteContext.Items.Count}" Value="0" />
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding DistractionFree}"
-                         Value="True">
-              <Setter Property="Visibility"
-                      Value="Collapsed" />
-            </DataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding MarkpadDocument.SiteContext.IsLoading}" Value="False" />
+                        <Condition Binding="{Binding MarkpadDocument.SiteContext.Items.Count}" Value="0" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Collapsed" />
+              </MultiDataTrigger>
+              <!--<DataTrigger Binding="{Binding ViewMode}" Value="ShowMD">
+                    --><!-- ???? --><!--
+                    <Setter Property="Visibility" Value="Collapsed" />
+              </DataTrigger>-->
           </Style.Triggers>
         </Style>
         </Controls:SiteView.Style>

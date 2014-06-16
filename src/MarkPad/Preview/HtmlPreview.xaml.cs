@@ -2,23 +2,29 @@
 using System.Windows;
 using System.Windows.Controls;
 using CefSharp;
+using Caliburn.Micro;
 
 namespace MarkPad.Preview
 {
     public partial class HtmlPreview : UserControl
     {
-        public static void Init()
+        public static void Init(IEventAggregator eventAggregator)
         {
             CefSharp.Settings settings = new CefSharp.Settings();
+
             if (CEF.Initialize(settings))
             {
                 CEF.RegisterScheme("theme", new ThemeSchemeHandlerFactory());
                 //CEF.RegisterScheme("test", new SchemeHandlerFactory());
                 //CEF.RegisterJsObject("bound", new BoundObject());
+                CEF.RegisterScheme("md", new MarkdownHandlerFactory(eventAggregator,() => DocDirectory ));
+                //CEF.RegisterJsObject("MDLink", new MDLink());
             }
         }
 
-        public static string BaseDirectory { get; set; }
+        // these are accessed from the HTML "thread" not the UI thread 
+        public static string DocDirectory { get; set; }
+        public static string ThemeDirectory { get; set; }
 
         #region public string Html
 
@@ -33,18 +39,31 @@ namespace MarkPad.Preview
 
         #endregion public string Html
 
-        #region public string FileName
+        #region public string Title
 
-        public static readonly DependencyProperty FileNameProperty =
-            DependencyProperty.Register("FileName", typeof(string), typeof(HtmlPreview), new PropertyMetadata("", FileNameChanged));
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title", typeof(string), typeof(HtmlPreview), new PropertyMetadata("", TitleChanged));
 
-        public string FileName
+        public string Title
         {
-            get { return (string)GetValue(FileNameProperty); }
-            set { SetValue(FileNameProperty, value); }
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
-        #endregion public string FileName
+        #endregion public string Location
+
+        #region public string Location
+
+        public static readonly DependencyProperty LocationProperty =
+            DependencyProperty.Register("Location", typeof(string), typeof(HtmlPreview), new PropertyMetadata("", LocationChanged));
+
+        public string Location
+        {
+            get { return (string)GetValue(LocationProperty); }
+            set { SetValue(LocationProperty, value); }
+        }
+
+        #endregion public string Title
 
         #region public double ScrollPercentage
 
@@ -77,11 +96,16 @@ namespace MarkPad.Preview
                 htmlPreview.host.LoadHtml((string)e.NewValue);
         }
 
-        private static void FileNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void TitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var htmlPreview = (HtmlPreview)d;
             if (htmlPreview.host != null && htmlPreview.host.IsBrowserInitialized)
                 htmlPreview.host.Title = (string)e.NewValue;
+        }
+
+        private static void LocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            DocDirectory = (string)e.NewValue;
         }
 
         private static void ScrollPercentageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -107,7 +131,7 @@ namespace MarkPad.Preview
             {
                 case "IsBrowserInitialized":
                     if (host.IsBrowserInitialized)
-                        Dispatcher.BeginInvoke((Action)InitializeData);
+                        Dispatcher.BeginInvoke((System.Action)InitializeData);
                     break;
             }
         }
@@ -115,7 +139,7 @@ namespace MarkPad.Preview
         private void InitializeData()
         {
             host.LoadHtml(Html);
-            host.Title = FileName;
+            host.Title = Title;
         }
     }
 }

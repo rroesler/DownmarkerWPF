@@ -108,6 +108,8 @@ namespace MarkPad.Document
             timer.Start();
             NotifyOfPropertyChange(() => HasChanges);
             NotifyOfPropertyChange(() => DisplayName);
+            NotifyOfPropertyChange(() => ShowMD);
+            NotifyOfPropertyChange(() => ShowWeb);
         }
 
         public Task<bool> SaveAs()
@@ -265,7 +267,11 @@ namespace MarkPad.Document
                 disposableSiteContext.Dispose();
         }
 
-        public bool DistractionFree { get; set; }
+        //public DocumentViewMode ViewMode { get; set; }
+        //public bool ShowWeb { get { return ViewMode != DocumentViewMode.ShowMD;  } }
+        //public bool ShowMD { get { return ViewMode != DocumentViewMode.ShowWeb;  } }
+        public bool ShowWeb { get { return shell.ShowWeb; } }
+        public bool ShowMD { get { return shell.ShowMD;  } }
 
         public int WordCount { get; private set; }
 

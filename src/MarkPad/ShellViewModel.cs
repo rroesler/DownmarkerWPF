@@ -110,6 +110,10 @@ namespace MarkPad
         public UpdaterViewModel Updater { get; set; }
         public DocumentViewModel ActiveDocumentViewModel { get { return MDI.ActiveItem as DocumentViewModel; } }
 
+        public DocumentViewMode ViewMode { get; set; }
+        public bool ShowWeb { get { return ViewMode != DocumentViewMode.ShowMD;} }
+        public bool ShowMD { get { return ViewMode != DocumentViewMode.ShowWeb; } }
+
         public string WorkingText { get; private set; }
         public bool IsWorking { get; private set; }
 
@@ -209,7 +213,7 @@ namespace MarkPad
         private async Task SaveDocument()
         {
             if (IsWorking) return;
-            var doc = MDI.ActiveItem as DocumentViewModel;
+            var doc = ActiveDocumentViewModel;
             if (doc != null)
             {
                 using (DoingWork(string.Format("Saving {0}", doc.MarkpadDocument.Title)))
@@ -222,7 +226,7 @@ namespace MarkPad
         private async Task SaveDocumentAs()
         {
             if (IsWorking) return;
-            var doc = MDI.ActiveItem as DocumentViewModel;
+            var doc = ActiveDocumentViewModel;
             if (doc != null)
             {
                 using (DoingWork(string.Format("Saving {0}", doc.MarkpadDocument.Title)))
@@ -253,7 +257,7 @@ namespace MarkPad
                 return;
             }
 
-            var doc = MDI.ActiveItem as DocumentViewModel;
+            var doc = ActiveDocumentViewModel;
             if (doc != null)
             {
                 MDI.CloseItem(doc);
@@ -268,13 +272,36 @@ namespace MarkPad
             CurrentState = ShowSettingsState;
         }
 
+        public void ToggleWeb()
+        {
+            ViewMode = (ViewMode == DocumentViewMode.ShowBoth ? DocumentViewMode.ShowMD : DocumentViewMode.ShowBoth);
+            // if (ActiveDocumentViewModel != null) ActiveDocumentViewModel.Update();
+            foreach (var i in MDI.Items.OfType<DocumentViewModel>()) i.Update();
+        }
+
+        public void ToggleMD()
+        {
+            ViewMode = (ViewMode == DocumentViewMode.ShowBoth ? DocumentViewMode.ShowWeb : DocumentViewMode.ShowBoth);
+            // if (ActiveDocumentViewModel != null) ActiveDocumentViewModel.Update();
+            foreach (var i in MDI.Items.OfType<DocumentViewModel>()) i.Update();
+        }
+
         public void ToggleWebView()
         {
-            var doc = MDI.ActiveItem as DocumentViewModel;
-            if (doc != null)
+            switch( ViewMode )
             {
-                doc.DistractionFree = !doc.DistractionFree;
+            case DocumentViewMode.ShowBoth:
+                ViewMode = DocumentViewMode.ShowMD;
+                break;
+            case DocumentViewMode.ShowMD:
+                ViewMode = DocumentViewMode.ShowWeb;
+                break;
+            case DocumentViewMode.ShowWeb:
+                ViewMode = DocumentViewMode.ShowBoth;
+                break;
             }
+            //if (ActiveDocumentViewModel != null) ActiveDocumentViewModel.Update();
+            foreach (var i in MDI.Items.OfType<DocumentViewModel>()) i.Update();
         }
 
         public void PrintDocument()
@@ -315,9 +342,9 @@ namespace MarkPad
 
         private async Task PublishDocument()
         {
-            var doc = MDI.ActiveItem as DocumentViewModel;
-
+            var doc = ActiveDocumentViewModel;
             if (doc == null) return;
+
             using (DoingWork(string.Format("Publishing {0}", doc.MarkpadDocument.Title)))
             {
                 await doc.Publish();

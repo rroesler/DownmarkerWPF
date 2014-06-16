@@ -40,7 +40,8 @@ namespace MarkPad.Document
 		var links = document.getElementsByTagName('a');
 		for (var i = 0; i < links.length; i++) {
 			var l = links[i];
-			if (l.getAttribute('href')) l.target = '_blank';
+            var h = l.getAttribute('href');
+            if (h && ! h.indexOf('md' == 0)) l.target = '_blank';
 		}
 	};
 </script>
@@ -120,7 +121,7 @@ body {{ font-family: Segoe UI, sans-serif; font-size:0.8em; }}
 			if (!TryGetHeaderValue(header, "theme", out themeName)) return "";
 
 			var resources = "";
-			var path = Path.Combine(HtmlPreview.BaseDirectory, themeName);
+			var path = Path.Combine(HtmlPreview.ThemeDirectory, themeName);
 
 			foreach (var resource in Directory.GetFiles(path, filter))
 			{

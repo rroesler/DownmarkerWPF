@@ -402,6 +402,35 @@
                 <Button AutomationProperties.AutomationId="OpenFromWeb" Content="OPEN FROM WEB" Command="{Binding OpenFromWebCommand}" />
             </WrapPanel>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Orientation="Horizontal">
+                <!--
+                <StackPanel.Resources>
+                    <Style TargetType="ToggleButton"  >
+                        <Setter Property="FontSize" Value="10" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Setter Property="Opacity" Value=".80" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                    </Style>
+                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource ToggleBase}" x:Key="ToggleOn" >
+                        <Setter Property="Background" Value="#FF8D4410" />
+                    </Style>
+                </StackPanel.Resources>-->
+                <Button Width="40" Content="MD" Style="{DynamicResource ChromelessButtonStyle}" FontWeight="Bold" >
+                    <!--  IsChecked="{Binding ShowMD, Mode=OneWay}" -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cm:ActionMessage MethodName="ToggleMD" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Width="40" Content="HTML" Style="{DynamicResource ChromelessButtonStyle}" FontWeight="Bold" Margin="0,0,10,0" >
+                    <!--  IsChecked="{Binding ShowWeb, Mode=OneWay}"-->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cm:ActionMessage MethodName="ToggleWeb" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
                 <ContentControl x:Name="Updater" />
                 <Button Content="SETTINGS" Style="{DynamicResource ChromelessButtonStyle}" FontSize="10.667" FontWeight="Bold" AutomationProperties.AutomationId="MarkpadSettings">
                     <i:Interaction.Triggers>

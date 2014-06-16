@@ -187,6 +187,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\StateHelper.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Document\DocumentViewMode.cs" />
     <Compile Include="Document\EditorBehaviours\AutoPairedCharacters.cs" />
     <Compile Include="Document\EditorBehaviours\PairedCharsHighlightProvider.cs" />
     <Compile Include="Document\EditorBehaviours\PairedCharacterRenderer.cs" />
@@ -355,6 +356,8 @@
       <DependentUpon>MdiView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MdiViewModel.cs" />
+    <Compile Include="Preview\MarkdownScheme.cs" />
+    <Compile Include="Preview\MDLink.cs" />
     <Compile Include="Preview\ThemeScheme.cs" />
     <Compile Include="Preview\HtmlPreview.xaml.cs">
       <DependentUpon>HtmlPreview.xaml</DependentUpon>
